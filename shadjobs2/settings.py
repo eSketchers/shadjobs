@@ -85,7 +85,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'usqo!vn)@qmb@5187n6lw!6i1-xk=f+@0l82$t_u(_5&cafjmi'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -143,8 +143,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
 )
 
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '116161875226-7mufmkp1eajvrt3f9llfblenj6r9ostq.apps.googleusercontent.com'
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'nYPOGmNnWsyn5-1zMATm5eh4'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
