@@ -1,0 +1,73 @@
+{% load staticfiles %}
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>{%block title%}{% trans 'Activate' %}{% endblock title%}</title>
+		
+		<link rel="Shortcut Icon" href="{% static 'favicon.ico' %}" />
+		{%block seo%}
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		{%endblock seo%}
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2.0">
+
+		<link rel="stylesheet" href="{% static 'css/reset.css' %}" type="text/css" media="screen" />
+		<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="{% static 'js/fancybox/jquery.fancybox.css' %}" media="screen" />
+		<link href="{% static 'icheck/css/all.css' %}" rel="stylesheet">
+		<link href="{% static 'fonts/fonts.css' %}" rel="stylesheet">
+		{%block css %}
+		{%endblock css%}
+	</head>
+	<body>
+		<header>
+	    	<div id="wrapper">
+		      <h1>
+		        <a href="#">Actí vate</a>
+		      </h1>
+		      <ul class="nav">
+		      	{%block menu%}
+		        <li>
+		          <a href="agencia_observa.html">Candidatos Observa</a>
+		        </li>
+		        <li>
+		          <a href="agencia_trabaja.html">Candidatos Trabaja</a>
+		        </li>
+	            <li class="active">
+		          <a href="agencia_perfil.html">Perfil empresa</a>
+		        </li>
+	            <li>
+		          <a href="agencia_faq.html">FAQs</a>
+		        </li>
+		        <li class="btn_cerrar">
+		          <a href="cerrar.html">Cerrar Sesión</a>
+		        </li>
+		        {%endblock menu%}
+		      </ul>
+	    	</div>
+	    </header>
+	    <div style="clear:both;"></div>
+	    {% block error %}
+			{% if messages %}
+			    {% for message in messages %}
+			    	<div {% if message.tags %} class="notification notification-{{ message.tags }}" >{{message|safe}}</div>
+			    	{%endif%}
+			    {% endfor %}
+			{%endif%}
+		{% endblock error %}
+		{% block content %}
+		{% endblock content %}
+		
+		<script type="text/javascript" src="{% static 'js/jquery-1.10.1.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/modernizr.custom.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/fancybox/jquery.fancybox.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/waypoints.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'icheck/icheck.js' %}"></script>
+		<script type="text/javascript" src="{% static 'js/unslider.js' %}"></script>
+		{%block js%}
+		{%endblock js%}
+	</body>
+	
+</html>

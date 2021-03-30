@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load agency %}
+{%block title%} Agency Profile {% endblock title%}
+{% block content %}
+
+<style>
+	.arrows {
+		position: relative;
+		top: -109px;
+		color: #fff;
+		display:block;
+		width:550px;
+	}
+</style>
+
+<div id="wrapper">
+	<div class="content">
+		<h2>Perfil de empresa</h2>
+		<p>Crea el peril que verán los solicitantes ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci.
+		</p>
+		<div id="formulario">
+			<form id="agency_profile_form" method="post" action=""  enctype="multipart/form-data">{% csrf_token %}
+				<table cellpadding="0" cellspacing="0" class="table_form">
+					<tr>
+						<td class="col50">
+							<input id="agency_name" required class="input_style" type="text" value="{{ form.agency_name.value|default_if_none:'' }}" name="agency_name" placeholder="Nombre Agencia*">
+							<div class="error-message">{{form.agency_name.errors.0}}</div>
+						</td>
+						<td class="col50 nomargin">
+							<input id="agency_address" value="{{form.agency_address.value|default_if_none:''}}" class="input_style" required type="text" name="agency_address" placeholder="Dirección*">
+							<div class="error-message">{{form.agency_address.errors.0}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="col50 nomargin">
+							<input id="agency_city" value="{{form.agency_city.value|default_if_none:''}}" class="input_style" type="text" required name="agency_city" placeholder="Ciudad*">
+							<div class="error-message">{{form.agency_city.errors.0}}</div>
+						</td>
+						<td class="col50">
+							<div class="styled-select">
+								<select id="FK_CITY" class="select_style" name="state_province" required tabindex="1">
+									<option value="">Provincia*</option>
+									{{form.state_province.value}}
+									{% for state in form.state_province|multiselect_choices %}
+										{% if form.state_province.value == state.0 %}
+										<option value="{{state.0}}" selected>{{state.1}}</option>
+										{% else %}
+										<option value="{{state.0}}">{{state.1}}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+							</div>
+							<div class="error-message">{{form.state_province.errors.0}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="col50">
+							<input id="agency_url" value="{{form.agency_url.value|default_if_none:''}}" class="input_style" type="url" name="agency_url" placeholder="Url web">
+							<div class="error-message">{{form.agency_url.errors.0}}</div>
+						</td>
+						<td class="col50 nomargin">
+						<input id="agency_email" value="{{form.agency_email.value|default_if_none:''}}" class="input_style" type="email" required name="agency_email" placeholder="email*">
+						<div class="error-message">{{form.agency_email.errors.0}}</div>
+						</td>
+					</tr>
+                        
+                    <tr>
+						<td class="col50">
+						<input id="agency_nombre" value="{{form.contact_person_name.value|default_if_none:''}}" required class="input_style" type="text" name="contact_person_name" placeholder="Nombre responsable*">
+						<div class="error-message">{{form.contact_person_name.errors.0}}</div>
+						</td>
+						<td class="col50 nomargin">
+						<input id="agency_apellidos" value="{{form.contact_person_surname.value|default_if_none:''}}" required class="input_style" type="text" name="contact_person_surname" placeholder="Apellidos responsable*">
+						<div class="error-message">{{form.contact_person_surname.errors.0}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="col50">
+						<input id="agency_linkedin" value="{{form.agency_linkedin_profile.value|default_if_none:''}}" class="input_style" type="url" name="agency_linkedin_profile" placeholder="URL Linkedin">
+						<div class="error-message">{{form.agency_linkedin_profile.errors.0}}</div>
+						</td>
+						<td class="col50 nomargin">
+						<input id="agency_phone" value="{{form.agency_telephone.value|default_if_none:''}}" class="input_style" type="text" name="agency_telephone" placeholder="Teléfono">
+						<div class="error-message">{{form.agency_telephone.errors.0}}</div>
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="col50" valign="top">
+							<p class="inner_text">Adjunta el logo de tu empresa a un tamaño de 125x125px:</p>
+							<div class="custom_file_upload">
+								<input type="text" class="file" name="file_info">
+								<div class="file_upload">
+									<input type="file" id="file_upload" name="agency_logo">
+									<div class="error-message">{{form.agency_logo.errors.0}}</div>
+								</div>
+							</div>
+						</td>
+						<td class="col50" valign="top">
+							<textarea id="comentarios" required class="textarea_style" placeholder="Comentarios*" name="comments">{{form.comments.value|default_if_none:''}}</textarea>
+							<div class="error-message">{{form.comments.errors.0}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<p><b>Aptitudes</b> que se desarrollan en la empresa:</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="error-message">{{form.agency_services.errors.0}}</div>
+							<table cellpadding="0" cellspacing="0" class="table_skills">
+								{% for service in form.agency_services|multiselect_choices %}
+								<tr>
+									<td>
+										<table cellpadding="0" cellspacing="0" class="table_skill">
+										<tr>
+											<td>
+												{% if service.0 in form.agency_services.value %}
+												<input tabindex="" id="citys_madrid" value="{{service.0}}" name="agency_services" checked="checked" type="checkbox">
+												{% elif service.0|slugify in form.agency_services.value %}
+												<input tabindex="" id="citys_madrid" value="{{service.0}}" name="agency_services" checked="checked" type="checkbox">
+												{% else %}
+												<input tabindex="" id="citys_madrid" value="{{service.0}}" name="agency_services" type="checkbox">
+												{% endif %}
+											</td>
+											<td><p>{{service.1}}</p></td>
+										</tr>
+										</table>
+									</td>
+								</tr>
+								{% endfor %}
+							</table>
+						</td>
+					</tr>
+						
+					<tr>
+						{% with from_date_month=form.available_date_from.value|default_if_none:''|date:"m" %}
+							{% with from_date_day=form.available_date_from.value|default_if_none:''|date:"d" %}
+						<td colspan="2">
+                            <div class="fechas_empresa">
+                            <div class="fechas">
+                                <h5>Selecciona las fechas que deseas que estén disponible para los alumnos</h5>
+                                <div class="banner">
+                                <ul>
+                                <li>
+                                <div class="mes">
+                                    <p id="2014-05">Mayo 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '05' and from_date_day == '06' %}solicitado{%endif%}" id="6-7">6  - 7</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '05' and from_date_day == '13' %}solicitado{%endif%}" id="13-14">13 - 14</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '05' and from_date_day == '20' %}solicitado{%endif%}" id="20-21">20 - 21</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '05' and from_date_day == '27' %}solicitado{%endif%}" id="27-28">27 - 28</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none last"></a>
+                                </div>
+                                </li>
+                                
+                                 <li>
+                                <div class="mes">
+                                    <p id="2014-06">Junio 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '06' and from_date_day == '03' %}solicitado{%endif%}" id="3-4">3 - 4</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '06' and from_date_day == '10' %}solicitado{%endif%}" id="10-11">10 -11</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '06' and from_date_day == '17' %}solicitado{%endif%}" id="17-18">17 - 18</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '06' and from_date_day == '24' %}solicitado{%endif%}" id="24-25">24 -25</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none last"></a>
+                                </div>
+                                </li>
+                                
+                                
+                                 <li>
+                                <div class="mes">
+                                    <p id="2014-07">Julio 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '07' and from_date_day == '01' %}solicitado{%endif%}" id="1-2">1 - 2</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '07' and from_date_day == '08' %}solicitado{%endif%}" id="8-9">8 - 9</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '07' and from_date_day == '15' %}solicitado{%endif%}" id="15-16">15 - 16</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '07' and from_date_day == '22' %}solicitado{%endif%}" id="22-23">22 - 23</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion last {% if from_date_month == '07' and from_date_day == '29' %}solicitado{%endif%}" id="29-30">29 - 30</a>
+                                </div>
+                                </li>
+                                
+                                <li>
+                                <div class="mes">
+                                    <p id="2014-08">Agosto 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none"></a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none"></a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none"></a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none"></a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none last"></a>
+                                </div>
+                                </li>
+                                
+                                
+                                <li>
+                                <div class="mes">
+                                    <p id="2014-09">Septiembre 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '09' and from_date_day == '02' %}solicitado{%endif%}" id="2-3">2 - 3</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '09' and from_date_day == '09' %}solicitado{%endif%}"  id="9-10">9 - 10</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '09' and from_date_day == '16' %}solicitado{%endif%}"  id="16-17">16 - 17</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '09' and from_date_day == '23' %}solicitado{%endif%}"  id="23-24">23 -24</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion last {% if from_date_month == '09' and from_date_day == '30' %}solicitado{%endif%}"  id="30-1">30 - 1</a>
+                                </div>
+                                </li>
+                                
+                                
+                                
+                                <li>
+                                <div class="mes">
+                                    <p id="2014-10">Octubre 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '10' and from_date_day == '07' %}solicitado{%endif%}" id="7-8">7 - 8</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '10' and from_date_day == '14' %}solicitado{%endif%}" id="14-15">14 - 15</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '10' and from_date_day == '21' %}solicitado{%endif%}" id="21-22">21 - 22</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '10' and from_date_day == '28' %}solicitado{%endif%}" id="28-29">28 - 29</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none last"></a>
+                                </div>
+                                </li>
+                                
+                                
+                                <li>
+                                <div class="mes">
+                                    <p id="2014-11">Noviembre 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '11' and from_date_day == '04' %}solicitado{%endif%}" id="4-5">4 - 5</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '11' and from_date_day == '11' %}solicitado{%endif%}" id="11-12">11 - 12</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '11' and from_date_day == '18' %}solicitado{%endif%}" id="18-19">18 - 19</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '11' and from_date_day == '25' %}solicitado{%endif%}" id="25-26">25 - 26</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion_none last"></a>
+                                </div>
+                                </li>
+                                
+                                
+                                
+                                 <li>
+                                <div class="mes">
+                                    <p id="2014-12">Diciembre 2014</p>
+                                </div>
+                                <div class="dias">
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '12' and from_date_day == '02' %}solicitado{%endif%}" id="2-3">2 - 3</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '12' and from_date_day == '09' %}solicitado{%endif%}" id="9-10">9 - 10</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '12' and from_date_day == '16' %}solicitado{%endif%}" id="16-17">16 - 17</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion {% if from_date_month == '12' and from_date_day == '23' %}solicitado{%endif%}" id="23-24">23 - 24</a>
+                                    <a href="javascript.void(0)" onclick="return false;" class="dia_formacion last {% if from_date_month == '12' and from_date_day == '30' %}solicitado{%endif%}" id="30-31">30 - 31</a>
+                                </div>
+                                </li>
+                                
+                               </ul>
+                                </div>
+                                
+                            </div><!--fin fecha-->
+                            </div>
+						</td>
+							{% endwith %}
+						{% endwith %}
+					</tr>
+						
+					<tr>
+						<td colspan="2">
+						<table border="0" cellspacing="0" cellpadding="0" class="fin_form">
+							<tr>
+								{% if not is_edit %}
+								<td class="colaviso">
+								<div class="aviso">
+									<div class="error-message">{{form.terms_condition.errors.0}}</div>
+									{% if form.terms_condition.value == 1 %}
+									<input tabindex="6" name="terms_condition" id="agency_aviso_legal" value="1" checked="checked" type="checkbox">
+									{% else %}
+									<input tabindex="6" name="terms_condition" id="agency_aviso_legal" value="1" type="checkbox">
+									{% endif %}
+									<label> <a class="fancybox" data-fancybox-type="iframe" href="politica.html" id="aviso_legalText">Acepto los términos y condiciones de la política de privacidad</a> </label>
+								</div></td>
+								<td class="colboton">
+								<button id="send_register" class="enviar" value="1" type="submit" >
+									Guardar Perfil
+								</button></td>
+								{% else %}
+								<td class="colboton">
+								<button id="send_register" class="enviar" value="1" style="width:253px; float: left;" type="submit" >
+									Guardar Perfil
+								</button></td>
+								{% endif %}
+							</tr>
+						</table></td>
+					</tr>
+				</table>
+			</form>
+		</div><!--fin formulario-->
+	</div><!--fin content-->
+</div><!--fin wrapper-->
+{% endblock content %}
+{%block js%}
+<script>
+$(document).ready(function(){
+	//PLACEHOLDERS
+	if (!ModernizrCustom.input.placeholder) {
+	    $("input").each(function(){
+	      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+	        $(this).val($(this).attr("placeholder"));
+	        $(this).focus(function(){
+	          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+	        });
+	        $(this).blur(function(){
+	          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+	        });
+	      }
+	    });
+	    $("textarea").each(function(){
+	      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+	        $(this).val($(this).attr("placeholder"));
+	        $(this).focus(function(){
+	          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+	        });
+	        $(this).blur(function(){
+	          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+	        });
+	      }
+	    });
+	}
+	//END PLACEHOLDERS
+	
+	if($('input').length>0)
+		$('input').iCheck({
+			checkboxClass: 'icheckbox_square-yellow',
+			radioClass: 'iradio_square-blue',
+			increaseArea: '20%'
+		});
+		
+
+	$(".fancybox").fancybox({
+		maxWidth	: 900,
+		maxHeight	: 600,
+		width		: '90%',
+		height		: '90%',
+		autoSize	: false,
+		closeClick	: false,
+		openEffect	: 'none',
+		closeEffect	: 'none'
+	});
+});
+
+//start of banner 
+$(function() {
+    var unslider = $('.banner').unslider({
+        speed: 500,     // animation speed, false for no transition (integer or boolean)
+        arrows: true,
+        delay: false,    // delay between slides, false for no autoplay (integer or boolean)
+        init: 100,        // init delay, false for no delay (integer or boolean)
+        pause: true,      // pause on hover (boolean)
+        loop: true,       // infinitely looping (boolean)
+        keys: true,        // keyboard shortcuts (boolean)
+        dots: false,        // display ••••o• pagination (boolean)
+        fluid: true,       // is it a percentage width? (boolean)
+        easing: 'swing' // easing function to use for animation
+    });
+
+});
+
+   $('.unslider-arrow').click(function() {
+       var fn = this.className.split(' ')[1];
+       
+       //  Either do unslider.data('unslider').next() or .prev() depending on the className
+       unslider.data('unslider')[fn]();
+   });
+   /*$(function() {
+	   get_year_month_day = $("#available_date_from").val();
+	   get_year_month_arr = get_year_month_day.split('-');//split of year-month-day
+       month = get_year_month_arr[1];//get month
+	   $("ul").css("left",'-'+((month-5)*100)+'%');// set a month on banner , move to required month
+	   closest_element_date = $( "a:contains('"+ parseInt(get_year_month_arr[2]) +"')" ).closest(":has('.mes')").find("p");//get day of given month
+	   console.log(closest_element_date);
+	   for (i=0;i<closest_element_date.length;i++)
+		   {
+		   date_field_id = $( "a:contains('"+ parseInt(get_year_month_arr[2]) +"')" ).closest(":has('.mes')").find("p")[i].id;//save all id's one by one to get the exact id which month has this day
+		   if ( date_field_id == (get_year_month_arr[0] + "-" + get_year_month_arr[1]))
+			   {
+			   $(".dias a").removeClass("solicitado");
+			   $("#"+date_field_id).parent().next(".dias").find('a:contains('+parseInt(get_year_month_arr[2])+" "+')').addClass("solicitado");
+			   break;//if found then break no need to go further
+			   }
+		   }//end of for loop
+   });*/
+   //alert of banned class
+   $(".dias a").click(function() {
+	   if ($(this).hasClass("dia_formacion_none"))
+		   {
+		      alert("Unavailability, Please Select another date.");//alert we have no available date
+		      return ;
+		   }
+	   if ($(this).hasClass("solicitado")){
+	   		$(this).removeClass("solicitado");
+	   }
+	   else{
+	   		$(this).addClass("solicitado");
+	   }
+	   //$(".dias a").removeClass("solicitado");//remove all selected classes and select right one
+	   
+	   
+   	});
+   //start of class change and update date
+   //select a selected class and get the refined date values and pass to hidden fields
+   $("#send_register").click(function() {
+	   var selected_val = $('.solicitado','.dias');//get elements of selected dates.
+	   $('.solicitado','.dias').each(function(index, element){
+	   		var from_and_till_day = $(this).attr('id').split('-');
+	   		var from_day = from_and_till_day[0].trim();
+	   		var till_day = from_and_till_day[1].trim();
+	   		var year_month = $(this).parent('.dias').prev('.mes').children('p').attr('id').split('-');
+	   		var year = year_month[0].trim();
+	   		var month = year_month[1].trim();
+	   		var from_complete_date = month + '-' + from_day + '-' + year + ' 00:00:00';
+	   		var till_complete_date = month + '-' + till_day + '-' + year + ' 00:00:00';
+	   		$('#agency_profile_form').append('<input type="hidden" name="available_date_from'+index+'" value="'+from_complete_date+'" />');
+	   		$('#agency_profile_form').append('<input type="hidden" name="available_date_till'+index+'" value="'+till_complete_date+'" />');
+	   });
+	   /*selected_val_arr = selected_val.split('-');//split two dates
+	   start_day_val = selected_val_arr[0].replace(/\s/g, '');//remove spaces
+	   till_day_val = selected_val_arr[1].replace(/\s/g, '');
+	   year_month = $('.solicitado','.dias').closest(":has('.mes')").find("p").attr("id");
+	   start_date = year_month + '-' + start_day_val + ' 00:00:00';//make date for save
+	   till_date = year_month + '-' + till_day_val + ' 00:00:00';
+	   $("#available_date_from").val(start_date);//now time to save
+	   $("#available_date_till").val(till_date);*/
+	   
+    });
+    
+</script>
+
+{%endblock js%}
+
+
+
+

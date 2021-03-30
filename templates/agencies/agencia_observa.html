@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load applicant %}
+{% block title %} Applicants Apply Observa {% endblock %}
+{%block menu%}
+        <li>
+          <a href="form_observa.html">Observa</a>
+        </li>
+        <li>
+          <a href="form_trabaja.html">Trabaja</a>
+        </li>
+        <li  class="active">
+          <a href="form_miperfil.html">Mi perfil</a>
+        </li>
+        <li>
+          <a href="faq.html">FAQs</a>
+        </li>
+        <li class="btn_cerrar">
+          <a href="cerrar.html">Cerrar Sesión</a>
+        </li>
+    {%endblock menu%}
+{% block content %}
+    <div id="wrapper">
+		<div class="content">
+
+		<h2>Candidatos Observa</h2>
+		<p>Estos son los candidatos de Actívate que han seleccionado una fecha en tu empresa. 
+			Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum 
+			feugiat nisl ut dapibus. Mauris iaculis porttitor posuere.
+		</p>
+
+			<div id="formulario">
+
+				<div class="filtros">
+					<h2>Filtros</h2>
+					<h4>Provincia</h4>
+					<select id="FK_EVENT" name="FK_EVENT" required="">
+						<option selected="selected" value="">Ciudad</option>
+                        {% for province in provinces %}
+                            <option value="{{ province.state_province }}">{{ province.state_province }}</option>
+                        {% endfor %}
+					</select>
+					<h4>Aptitudes</h4>
+						<form id="skills" method="post" action="">
+								<table cellpadding="0" cellspacing="0" class="table_skills">
+                                    <tr>
+                                        <td>
+                                            <table cellpadding="0" cellspacing="0" class="table_skill">
+                                            <tr>
+                                                <td><input tabindex="1" type="radio" id="skills1" name="minimal-radio" checked></td>
+                                                <td><p>Todas</p></td>
+                                            </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    {% for skill in agency_services %}
+                                        <tr>
+                                            <td>
+                                                <table cellpadding="0" cellspacing="0" class="table_skill">
+                                                <tr>
+                                                    <td><input tabindex="{{ forloop.counter|add:'1' }}" type="radio" id="skills1" name="minimal-radio" ></td>
+                                                    <td><p>{{ skill.service_name }}</p></td>
+                                                </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+								</table>
+						</form>
+					<h4>Mis candidatos</h4>
+						<form id="estado" method="post" action="">
+								<table cellpadding="0" cellspacing="0" class="table_skills">
+									<tr>
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_skill">
+											<tr>
+												<td><input tabindex="1" type="radio" id="estado1" name="minimal-radio" checked></td>
+												<td><p>Todas</p></td>
+											</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_skill">
+											<tr>
+												<td><input tabindex="1" type="radio" id="estado1" name="minimal-radio"></td>
+												<td><p>Solicitado</p></td>
+											</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_skill">
+											<tr>
+												<td><input tabindex="1" type="radio" id="estado1" name="minimal-radio"></td>
+												<td><p>Admitido</p></td>
+											</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_skill">
+											<tr>
+												<td><input tabindex="1" type="radio" id="estado1" name="minimal-radio"></td>
+												<td><p>Favoritos</p></td>
+											</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+						</form>
+				</div><!--fin filtros-->
+
+				<div class="companys">
+					<h2 style="float:left;">Candidatos</h2>
+
+                    <div id="ordenar">
+                      	  <h6>Ordenar por:</h6>
+                          <select id="order" name="order" class="select_ordenar">
+                              <option  value="fech_down">Fecha</option>
+                              <option  value="vot_down">Favoritos</option>
+                          </select>
+                  	</div>
+                </div>
+
+                <div id="agencies_container">
+                	
+                    {% for candidate_applied in applicants %}
+					<div class="ficha_company">
+						<div class="name">
+							<table cellpadding="0" cellspacing="0">
+								<tr class="open-box">
+                                    {% if forloop.first %}
+									    <td width="30"><img class="image-opened-closed" src="{% static 'img/company_open.png' %}" alt="company_open"/></td>
+                                    {% else %}
+                                        <td width="30"><img class="image-opened-closed" src="{% static 'img/company_close.png' %}" alt="company_open"/></td>
+                                    {% endif %}
+									<td>{{ candidate_applied.applied_by.applicant_name }}, {{ candidate_applied.applied_by.applicant_location.state_province }}</td>
+								</tr>
+							</table>
+							<div class="estado">Estado: {% if candidate_applied.current_status == 0 %}Ninguno{% elif candidate_applied.current_status == 1 %}Admitido{% elif candidate_applied.current_status == 2%}Rechazado{% endif %}</div>
+							<div class="fav {% if candidate_applied.%}select{% endif %}"></div>
+						</div>
+                        {% if forloop.first %}
+                            <div class="ficha opened">
+                        {% else %}
+						    <div class="ficha hide">
+                        {% endif %}
+							<div class="definicion_alumno">
+								<p>
+									<b>Provincia:</b>
+									{{candidate_applied.applied_by.applicant_location.state_province}}
+								</p>
+								<p>
+									<b>Teléfono:</b>
+									{{candidate_applied.applied_by.applicant_telephone}}
+								</p>
+								<p><br><b>Estudios:</b></p>
+								<p>
+									{% for study in estudios %}
+										- {{study.course_diploma_name}}.<br>
+									{% endfor %}
+								</p>
+								<p><b>Experiencia:</b></p>
+								<p>
+									{% for experience in experiencia %}
+										- {{experience.experience}}.<br>
+									{% endfor %}
+								</p>
+								<p><br><b>Comentarios:</b></p>
+								<p>candidate_applied.applied_by.comments</p>
+								
+								<p><br><b>Especialidades:</b></p>
+								<ul class="especialidades">
+                                    {% for skill in especialidades %}
+                                        <li>{{ skill.applicant_skills.service_name }}</li>
+                                    {% endfor %}
+								</ul>
+								
+							</div><!-- fin definicion_alumno-->
+
+							<div class="fechas seleccionadas_observa">
+								<h5>Fechas seleccionadas por el candidato <span>Entre las que has activado en tu ficha de empresa</span></h5>
+                                <div class="dias">
+									<a href="#" class="dia_formacion"><span>abril</span> 1 - 2</a>
+									<a href="#" class="dia_formacion"><span>abril</span> 8 - 9</a>
+									<a href="#" class="dia_formacion admitido"><span>abril</span> 15 - 16</a>
+									<a href="#" class="dia_formacion rechazado"><span>abril</span><span class="fecha_cerrada">fecha cerrada</span>22 - 23</a>
+									<a href="#" class="dia_formacion"><span>mayo</span> 22 - 23</a>
+								</div>
+								
+								<a class="solicitar" href="#">Aceptar Fecha</a>
+							</div><!--fin fecha-->
+						</div><!--fin ficha-->
+					</div><!--fin ficha_company-->
+                    {% endfor %}
+                    
+                </div>
+
+
+
+		</div><!--fin content-->
+	</div><!--fin wrapper-->
+    </div></div></div>
+
+{% endblock content %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/unslider.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+
+
+            //PLACEHOLDERS
+            if (!ModernizrCustom.input.placeholder) {
+                $("input").each(function(){
+                  if($(this).val()=="" && $(this).attr("placeholder")!=""){
+                    $(this).val($(this).attr("placeholder"));
+                    $(this).focus(function(){
+                      if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+                    });
+                    $(this).blur(function(){
+                      if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+                    });
+                  }
+                });
+                $("textarea").each(function(){
+                  if($(this).val()=="" && $(this).attr("placeholder")!=""){
+                    $(this).val($(this).attr("placeholder"));
+                    $(this).focus(function(){
+                      if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+                    });
+                    $(this).blur(function(){
+                      if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+                    });
+                  }
+                });
+            }
+            //END PLACEHOLDERS
+
+
+
+            if($('input').length>0){
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-yellow',
+                    radioClass: 'iradio_square-yellow',
+                    increaseArea: '20%'
+                });
+            }
+
+
+
+            $(".fancybox").fancybox({
+                maxWidth	: 900,
+                maxHeight	: 600,
+                width		: '90%',
+                height		: '90%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none'
+            });
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+            $(document).on('click', '.open-box',
+                function()
+                {
+                    $ficha = $(this).parent().parent().parent().parent().find('.ficha');
+                    if ( $ficha.hasClass('opened') ){
+                        $ficha.removeClass('opened');
+                        $(this).find('img.image-opened-closed').attr("src", "{% static 'img/company_close.png' %}");
+                        $ficha.slideUp();
+                    }else{
+                        $ficha.addClass('opened');
+                        $ficha.find('.banner').css({width:'100%', height:'93px'});
+                        $(this).find('img.image-opened-closed').attr("src", "{% static 'img/company_open.png' %}");
+                        $ficha.slideDown();
+                    }
+                }
+            );
+
+            function ajax_filters(sort_by, provincia, aptitudes, estado){
+                $.ajax(
+                    {
+                        type: 'GET',
+                        url: '/applicants/apply/observa/',
+                        data:{'sort_by':sort_by, 'provincia':provincia,
+                                'aptitudes':aptitudes, 'estado':estado},
+                        success: function(data, textStatus, jqXHR)
+                        {
+                            $(document).find('#agencies_container').html(data);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown)
+                        {
+                            alert(errorThrown);
+                        }
+                    }
+                );
+            }
+
+            function calculate_filters()
+            {
+                 ajax_filters(
+                         $('#order').val(),
+                         $('#FK_EVENT').val(),
+                         $('.iradio_square-yellow.checked').children('#skills1').parent().parent().next().find('p').html(),
+                         $('.iradio_square-yellow.checked').children('#estado1').parent().parent().next().find('p').html()
+                   );
+            }
+
+            $(document).on('change', '#order',
+                function()
+                {
+                    calculate_filters();
+                }
+            );
+
+            $(document).on('change', '#FK_EVENT',
+                function()
+                {
+                    calculate_filters();
+                }
+            );
+
+
+            $('ins.iCheck-helper').on('click',
+                function(){
+                    calculate_filters();
+                }
+            );
+
+            //////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+        });
+    </script>
+    <script>
+        $(function() {
+            var unslider = $('.banner').unslider({
+                speed: 500,     // animation speed, false for no transition (integer or boolean)
+                arrows: true,
+                delay: false,    // delay between slides, false for no autoplay (integer or boolean)
+                init: 100,        // init delay, false for no delay (integer or boolean)
+                pause: true,      // pause on hover (boolean)
+                loop: true,       // infinitely looping (boolean)
+                keys: true,        // keyboard shortcuts (boolean)
+                dots: false,        // display ••••o• pagination (boolean)
+                fluid: true,       // is it a percentage width? (boolean)
+                easing: 'swing' // easing function to use for animation
+            });
+        });
+    </script>
+
+    <script>
+        $('.unslider-arrow').click(function() {
+            var fn = this.className.split(' ')[1];
+
+            //  Either do unslider.data('unslider').next() or .prev() depending on the className
+            unslider.data('unslider')[fn]();
+        });
+    </script>
+
+    <script type="text/javascript">
+
+
+
+
+    </script>
+{% endblock js%}

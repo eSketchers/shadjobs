@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load agency %}
+{%block title%} Applicant Profile {% endblock title%}
+  	{%block menu%}
+        <li>
+          <a href="form_observa.html">Observa</a>
+        </li>
+        <li>
+          <a href="form_trabaja.html">Trabaja</a>
+        </li>
+        <li  class="active">
+          <a href="form_miperfil.html">Mi perfil</a>
+        </li>
+        <li>
+          <a href="faq.html">FAQs</a>
+        </li>
+        <li class="btn_cerrar">
+          <a href="cerrar.html">Cerrar Sesión</a>
+        </li>
+    {%endblock menu%}
+    {% block content %}
+	<div id="wrapper">
+		<div class="content">
+			<h2>Trabaja</h2>
+			<p>Crea tu perfil de trabajo ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. 
+			</p>
+			<div id="formulario">
+				<form id="contact" method="post" action="">{% csrf_token %}
+					<table cellpadding="0" cellspacing="0" class="table_form">
+						<tr>
+							<td class="col50">
+							<input id="work_name" class="input_style" type="text" name="applicant_name" placeholder="Nombre*">
+							</td>
+							<td class="col50 nomargin">
+							<input id="work_lastname" class="input_style" type="text" name="applicant_surname" placeholder="Apellidos*">
+							</td>
+						</tr>
+						<tr>
+							<td class="col50">
+								<div class="styled-select">
+									<select id="FK_CITY" class="select_style" required name="state_province" tabindex="1">
+									<option value="">Provincia*</option>
+									{{form.state_province.value}}
+									{% for state in form.state_province|multiselect_choices %}
+										{% if form.state_province.value == state.0 %}
+										<option value="{{state.0}}" selected>{{state.1}}</option>
+										{% else %}
+										<option value="{{state.0}}">{{state.1}}</option>
+										{% endif %}
+									{% endfor %}
+									</select>
+								</div>
+							</td>
+							<td class="col50 nomargin">
+							<input id="work_phone" class="input_style" type="text" name="applicant_telephone" placeholder="Teléfono">
+							</td>
+						</tr>
+                        
+                        <tr>
+							<td class="col50 nomargin">
+							<input id="work_linkedin" class="input_style" type="text" name="work_phone" placeholder="URL Linkedin">
+							</td>
+						</tr>
+                        
+						<tr>
+							<td class="col" colspan="2">
+							<input id="work_estudios" class="input_style" type="text" name="work_estudios" placeholder="Estudios (1/5)">
+							<a href="javascript:void(0)" class="add_study" id="add_study"></a>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="col" colspan="2">
+							<input id="work_estudios" class="input_style" type="text" name="work_estudios" placeholder="Experiencia (1/5)">
+							<a href="javascript:void(0)" class="add_study" id="add_exp"></a>
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<td class="col50" valign="top">
+								<p class="inner_text">Adjunta aquí tu curriculum completo en formato PDF con un peso máximo de XXMb:</p>
+								<div class="custom_file_upload">
+									<input type="text" class="file" name="file_info">
+									<div class="file_upload">
+										<input type="file" id="file_upload" name="file_upload">
+									</div>
+								</div>
+							</td>
+							<td class="col50" valign="top">
+								<textarea id="comentarios" class="textarea_style" placeholder="Comentarios*" name="comentarios"></textarea>
+							</td>
+						</tr>
+						
+						
+						<tr><td height="30"></td></tr>
+						
+						<tr>
+							<td colspan="2">
+								<p><b>Ciudades</b> de interés (puedes seleccionar hasta 3 ciudades):</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<table cellpadding="0" cellspacing="0" class="table_citys">
+									<tr>
+									{% for cities in form.cities_interest|multiselect_choices %}
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_city">
+											<tr>
+												<td><input name="cities_interest" tabindex="6" id="citys_madrid" value="{{cities.0}}" required type="checkbox"></td>
+												<td><p>{{cities.0}}</p></td>
+											</tr>
+											</table>
+										</td>
+									{% endfor %}
+									</tr>
+								</table>
+							
+							</td>
+						</tr>
+						
+						<tr><td height="30"></td></tr>
+						
+						<tr>
+							<td colspan="2">
+								<p><b>Aptitudes</b> que te gustaría desarrollar  (puedes seleccionar hasta 3):</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<table cellpadding="0" cellspacing="0" class="table_skills">
+									{% for service in all_services %}
+									<tr>
+										<td>
+											<table cellpadding="0" cellspacing="0" class="table_skill">
+											<tr>
+												<td><input tabindex="6" id="service{{forloop.counter}}" name="applicant_specialities" value="{{service.id}}" {%if forloop.counter == 1 %}checked="checked"{%endif%} required type="checkbox"></td>
+												<td><p>{{service}}</p></td>
+											</tr>
+											<tr {% if not forloop.counter == 1 %}class="hide"{%endif%}>
+												<td>
+												<div class="killerQuestion">
+													<p>{{service.question_for_candidates}} <span class="question">?</span></p>
+													<textarea id="comentarios" class="textarea_style" name="service_comment_{{service.id}}" placeholder="Comentarios*"></textarea>
+												</div><!--fin killerQuestion-->
+												</td>
+											</tr>
+											 </table>
+										</td>
+									</tr>
+									{%endfor%}
+						  		</table>
+							
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="2">
+							<table border="0" cellspacing="0" cellpadding="0" class="fin_form">
+								<tr>
+									<td class="colaviso">
+									<div class="aviso">
+										<input tabindex="6" id="work_aviso_legal" value="1" checked="checked" required type="checkbox">
+										<label> <a class="fancybox" data-fancybox-type="iframe" href="politica.html" id="aviso_legalText">Acepto los términos y condiciones de la política de privacidad</a> </label>
+									</div></td>
+									<td class="colboton">
+									<button id="send_register" class="enviar" value="1" type="submit" onclick="sendContact(); return false;">
+										Guardar Perfil
+									</button></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table>
+				</form>
+			</div><!--fin formulario-->
+		</div><!--fin content-->
+	</div><!--fin wrapper-->
+	{% endblock content %}
+{% block js %}
+<script>
+	$(document).ready(function(){
+		//PLACEHOLDERS
+		if (!ModernizrCustom.input.placeholder) {
+		    $("input").each(function(){
+		      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+		        $(this).val($(this).attr("placeholder"));
+		        $(this).focus(function(){
+		          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+		        });
+		        $(this).blur(function(){
+		          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+		        });
+		      }
+		    });
+		    $("textarea").each(function(){
+		      if($(this).val()=="" && $(this).attr("placeholder")!=""){
+		        $(this).val($(this).attr("placeholder"));
+		        $(this).focus(function(){
+		          if($(this).val()==$(this).attr("placeholder")) $(this).val("");
+		        });
+		        $(this).blur(function(){
+		          if($(this).val()=="") $(this).val($(this).attr("placeholder"));
+		        });
+		      }
+		    });
+		}
+		//END PLACEHOLDERS
+		
+		if($('input').length>0)
+			$('input').iCheck({
+				checkboxClass: 'icheckbox_square-yellow',
+				radioClass: 'iradio_square-blue',
+				increaseArea: '20%'
+			});
+			
+	
+		$(".fancybox").fancybox({
+			maxWidth	: 900,
+			maxHeight	: 600,
+			width		: '90%',
+			height		: '90%',
+			autoSize	: false,
+			closeClick	: false,
+			openEffect	: 'none',
+			closeEffect	: 'none'
+		});
+		$("span.question").hover(function () {
+	    $(this).append('<div class="tooltip"><p>Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque.</p></div>');
+	  }, function () {
+	    $("div.tooltip").remove();
+	  });
+	});
+	
+	add_study_count = 1;
+	add_exp_count = 1;
+	$( "#add_study" ).on( "click", function() {
+		if (add_study_count == 5)
+			{
+			 return false;
+			}
+		placeholder = 'Estudios ';
+		add_field(this,add_study_count,placeholder);
+		add_study_count++;
+		});
+	$( "#add_exp" ).on( "click", function() {
+        if (add_exp_count == 5)
+            {
+             return false;
+            }
+        placeholder = 'Experiencia ';
+        add_field(this,add_exp_count,placeholder);
+        add_exp_count++;
+        });
+	
+</script>
+<script>
+function add_field(object,add_field_count,placeholder)
+{
+	$(object).parent().parent().after(
+            $(object).parent().parent()
+            .clone(true,true)
+            .attr("id",object.id+add_field_count)
+            );
+        $(object).remove();
+        $("#"+object.id+add_field_count).find("input").attr("placeholder",placeholder+" ("+(add_field_count+1)+"/5)");
+        return ;
+}
+$(window).bind("load", function() {
+	$('[id^=service]').each(function() {
+	  $( this ).next().attr('id', $(this).attr("id")+'dumy');//add dumy idx to all next generated elements from services elements
+	});
+	//get the id starting from dumy added id'x and hide the area and checked the inuput fields
+	$("[id$='dumy']").on( "click", function() {
+		if ($(this).parent().attr("aria-checked") == "true") {
+	        $(this).prev().attr('checked',true);
+	        $(this).parent().parent('td').parent('tr').next().removeClass('hide');
+	        return;
+	        }
+		else
+			{
+			$(this).prev().attr('checked',false);
+			$(this).parent().parent('td').parent('tr').next().addClass('hide');
+	        return;
+			}
+	    });
+});
+</script>
+{% endblock js %}

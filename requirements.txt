@@ -1,0 +1,7 @@
+Django==1.5.7
+MySQL-python==1.2.5
+django-appengine-toolkit
+South==0.8.4
+requests==2.2.1
+django-model-utils
+google-api-python-client

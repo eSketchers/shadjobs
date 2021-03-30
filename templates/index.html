@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{%block title%} Agency Login {% endblock title%}
+
+{% block content %}
+	<form action="{% url 'login-view' %}" method="post">{% csrf_token %}
+	    {{ form.as_p }}
+	    <input type="submit" value="Create" />
+	</form>
+	
+	<a href="/accounts/google/">Login Via Google</a>
+{% endblock content %}

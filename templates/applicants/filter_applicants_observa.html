@@ -1,0 +1,206 @@
+{% load staticfiles %}
+{% load applicant %}
+{% for agency in agencies %}
+    <div class="ficha_company">
+        <div class="name">
+            <table cellpadding="0" cellspacing="0">
+                <tr class="open-box">
+                    {% if forloop.first %}
+                        <td width="30"><img class="image-opened-closed" src="{% static 'img/company_open.png' %}" alt="company_open"/></td>
+                    {% else %}
+                        <td width="30"><img class="image-opened-closed" src="{% static 'img/company_close.png' %}" alt="company_open"/></td>
+                    {% endif %}
+                    <td>{{ agency.agency_name }} , {{ agency.agency_location.city }}</td>
+                </tr>
+            </table>
+            <div class="estado">Estado: {{ agency.agency_location.state_provice }}</div>
+        </div>
+        {% if forloop.first %}
+            <div class="ficha opened">
+        {% else %}
+            <div class="ficha hide">
+        {% endif %}
+            <img src="/media/{{ agency.agency_logo }}" alt="logo_125x125" width="125" height="125" />
+            <div class="definicion_agencia">
+                <p>{{ agency.comments }}</p>
+                <p><b>Especialidades:</b></p>
+
+                <ul class="especialidades">
+                    {% for service in agency.agency_services.all|partition:"2"|first %}
+                        <li>{{ service.service_name }}</li>
+                    {% endfor %}
+                </ul>
+
+                <ul class="especialidades">
+                    {% for service in agency.agency_services.all|partition:"2"|last %}
+                        <li>{{ service.service_name }}</li>
+                    {% endfor %}
+                </ul>
+
+
+                <p><a href="#">{{ agency.agency_url }}</a></p>
+            </div><!-- fin definicion_agencia-->
+
+            <div class="fechas">
+                <h5>Selecciona la fecha que deseas</h5>
+
+
+
+                <div class="banner">
+
+
+                <ul>
+
+                <li>
+                <div class="mes">
+                    <p>Mayo 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">6  - 7</a>
+                    <a href="#" class="dia_formacion solicitado">13 - 14</a>
+                    <a href="#" class="dia_formacion admitido">20 - 21</a>
+                    <a href="#" class="dia_formacion rechazado">27 - 28</a>
+                    <a href="#" class="dia_formacion_none last"></a>
+                </div>
+                </li>
+
+                 <li>
+                <div class="mes">
+                    <p>Junio 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">3 - 4</a>
+                    <a href="#" class="dia_formacion">10 -11</a>
+                    <a href="#" class="dia_formacion">17 - 18</a>
+                    <a href="#" class="dia_formacion">24 -25</a>
+                    <a href="#" class="dia_formacion_none last"></a>
+                </div>
+                </li>
+
+
+                 <li>
+                <div class="mes">
+                    <p>Julio 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">1 - 2</a>
+                    <a href="#" class="dia_formacion">8 - 9</a>
+                    <a href="#" class="dia_formacion">15 - 16</a>
+                    <a href="#" class="dia_formacion">22 - 23</a>
+                    <a href="#" class="dia_formacion last">29 - 30</a>
+                </div>
+                </li>
+
+
+                <li>
+                <div class="mes">
+                    <p>Agosto 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion_none"></a>
+                    <a href="#" class="dia_formacion_none"></a>
+                    <a href="#" class="dia_formacion_none"></a>
+                    <a href="#" class="dia_formacion_none"></a>
+                    <a href="#" class="dia_formacion_none last"></a>
+                </div>
+                </li>
+
+
+                <li>
+                <div class="mes">
+                    <p>Septiembre 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">2 - 3</a>
+                    <a href="#" class="dia_formacion">9 - 10</a>
+                    <a href="#" class="dia_formacion">16 - 17</a>
+                    <a href="#" class="dia_formacion">23 -24</a>
+                    <a href="#" class="dia_formacion last">30 - 1</a>
+                </div>
+                </li>
+
+
+
+                <li>
+                <div class="mes">
+                    <p>Octubre 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">7 - 8</a>
+                    <a href="#" class="dia_formacion">14 - 15</a>
+                    <a href="#" class="dia_formacion">21 - 22</a>
+                    <a href="#" class="dia_formacion">28 - 29</a>
+                    <a href="#" class="dia_formacion_none last"></a>
+                </div>
+                </li>
+
+
+                <li>
+                <div class="mes">
+                    <p>Noviembre 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">4 - 5</a>
+                    <a href="#" class="dia_formacion">11 - 12</a>
+                    <a href="#" class="dia_formacion">18 - 19</a>
+                    <a href="#" class="dia_formacion">25 - 26</a>
+                    <a href="#" class="dia_formacion_none last"></a>
+                </div>
+                </li>
+
+
+
+                 <li>
+                <div class="mes">
+                    <p>Diciembre 2014</p>
+                </div>
+                <div class="dias">
+                    <a href="#" class="dia_formacion">2 - 3</a>
+                    <a href="#" class="dia_formacion">9 - 10</a>
+                    <a href="#" class="dia_formacion">16 - 17</a>
+                    <a href="#" class="dia_formacion">23 - 24</a>
+                    <a href="#" class="dia_formacion last">30 - 31</a>
+                </div>
+                </li>
+
+               </ul>
+                </div>
+
+
+
+                <div class="centrar">
+                <a id="solicitar" class="fancybox" data-fancybox-type="iframe" href="form_observa_form.html">
+                Solicitar Fecha</a>
+                </div>
+
+            </div><!--fin fecha-->
+
+        </div><!--fin ficha-->
+    </div><!--fin ficha_company-->
+{% endfor %}
+
+<script>
+    $(function() {
+        var unslider = $('.banner').unslider({
+            speed: 500,     // animation speed, false for no transition (integer or boolean)
+            arrows: true,
+            delay: false,    // delay between slides, false for no autoplay (integer or boolean)
+            init: 100,        // init delay, false for no delay (integer or boolean)
+            pause: true,      // pause on hover (boolean)
+            loop: true,       // infinitely looping (boolean)
+            keys: true,        // keyboard shortcuts (boolean)
+            dots: false,        // display ••••o• pagination (boolean)
+            fluid: true,       // is it a percentage width? (boolean)
+            easing: 'swing' // easing function to use for animation
+        });
+    });
+</script>
+
+<script>
+    $('.unslider-arrow').click(function() {
+        var fn = this.className.split(' ')[1];
+
+        //  Either do unslider.data('unslider').next() or .prev() depending on the className
+        unslider.data('unslider')[fn]();
+    });
+</script>
